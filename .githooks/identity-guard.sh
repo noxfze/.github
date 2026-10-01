@@ -20,9 +20,12 @@ readonly SUBJECT='^(feat|fix|perf|refactor|docs|style|test|build|ci|chore|revert
 
 fail() { echo "identity-guard: $*" >&2; exit 1; }
 
-check_message() {
+check_subject() {
   local subject; subject="$(grep -v '^#' "$1" | head -1)"
   [[ "$subject" =~ $SUBJECT ]] || fail "subject is not a Conventional Commit (type(scope)!: description): $subject"
+}
+
+check_message() {
   if grep -Eiq "$FORBIDDEN" "$1"; then fail "attribution trailer in commit message: $(grep -Ei "$FORBIDDEN" "$1" | head -1)"; fi
   # Optional local denylist (never committed): .git/info/identity-denylist, one word per line.
   local deny; deny="$(git rev-parse --git-dir 2>/dev/null)/info/identity-denylist"
@@ -34,13 +37,16 @@ case "${1:-}" in
     [[ "$(git config user.name)" == "$NAME" && "$(git config user.email)" == "$EMAIL" ]] \
       || fail "git identity must be '$NAME <$EMAIL>' (git config user.name / user.email)" ;;
   message)
-    check_message "$2" ;;
+    check_subject "$2"; check_message "$2" ;;
   range)
     tmp="$(mktemp)"; trap 'rm -f "$tmp"' EXIT
+    # Released history (reachable from a version tag) predates the subject rule; identity and trailers still apply.
+    released="$(git rev-list --tags='v*' 2>/dev/null || true)"
     for c in $(git rev-list "$2"); do
       who="$(git log -1 --format='%an <%ae>|%cn <%ce>' "$c")"
       [[ "$who" == "$NAME <$EMAIL>|$NAME <$EMAIL>" ]] || fail "commit ${c:0:7} has identity $who"
       git log -1 --format=%B "$c" > "$tmp"; check_message "$tmp"
+      grep -qx "$c" <<< "$released" || check_subject "$tmp"
     done ;;
   *) fail 'usage: identity-guard.sh config | message <file> | range <range>' ;;
 esac
