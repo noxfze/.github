@@ -6,9 +6,9 @@
 
 ### Nox FZE
 
-An independent software engineering company. We design, develop and operate proprietary computational systems for the microstructure of derivatives markets.
+Software engineering for electronic markets. We design, implement, operate and maintain the computer-systems software beneath trading and market-data infrastructure — from the problem to the program.
 
-**Research** · **Engineering** · **Operations**
+**Design** · **Engineering** · **Operations**
 
 [noxfze.com](https://noxfze.com) · [contact@noxfze.com](mailto:contact@noxfze.com) · [Bluesky](https://bsky.app/profile/noxfze.com) · Umm Al Quwain, United Arab Emirates
 
