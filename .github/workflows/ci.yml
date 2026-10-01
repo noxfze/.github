@@ -1,6 +1,6 @@
 # Fails the push if any new commit is not authored and committed by Nox FZE
 # (noxfze-admin) or carries an attribution trailer. Same rule as .githooks.
-name: Identity
+name: CI
 on: push
 permissions:
   contents: read
