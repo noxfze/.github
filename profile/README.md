@@ -12,4 +12,4 @@ Software engineering for electronic markets. We design, implement, operate and m
 
 [noxfze.com](https://noxfze.com) · [contact@noxfze.com](mailto:contact@noxfze.com) · [Bluesky](https://bsky.app/profile/noxfze.com) · Umm Al Quwain, United Arab Emirates
 
-<sub>Privately held · Est. 2025 · Licence No. 11054, Umm Al Quwain Free Trade Zone</sub>
+<sub>Privately held · Est. 2025 · Licence 11054, Umm Al Quwain Free Trade Zone</sub>
