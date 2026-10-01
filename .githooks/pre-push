@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Checks every commit about to be pushed (stdin: <local ref> <local sha> <remote ref> <remote sha>).
+guard="$(git rev-parse --show-toplevel)/.githooks/identity-guard.sh"
+zero=0000000000000000000000000000000000000000
+while read -r _ local_sha _ remote_sha; do
+  [[ "$local_sha" == "$zero" ]] && continue
+  if [[ "$remote_sha" == "$zero" ]]; then range="$local_sha"; else range="$remote_sha..$local_sha"; fi
+  "$guard" range "$range" || exit 1
+done

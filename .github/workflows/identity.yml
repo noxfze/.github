@@ -1,0 +1,20 @@
+# Fails the push if any new commit is not authored and committed by Nox FZE
+# (noxfze-admin) or carries an attribution trailer. Same rule as .githooks.
+name: Identity
+on: push
+permissions:
+  contents: read
+jobs:
+  identity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Every pushed commit has the Nox FZE identity
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          if [[ "$BEFORE" =~ ^0+$ ]] || ! git cat-file -e "$BEFORE" 2>/dev/null; then range="$AFTER"; else range="$BEFORE..$AFTER"; fi
+          bash .githooks/identity-guard.sh range "$range"
