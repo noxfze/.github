@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Identity guard: every commit in this repository is authored and committed by
-# Nox FZE through the noxfze-admin account, and carries no co-author or other
-# attribution trailers. Shared by the git hooks (local) and the CI check
-# (GitHub), so both enforce exactly the same rule.
+# Nox FZE through the noxfze-admin account, carries no co-author or other
+# attribution trailers, and has a Conventional Commits 1.0.0 subject (the
+# release derives the next version from it). Shared by the git hooks (local)
+# and the CI check (GitHub), so both enforce exactly the same rule; identical
+# in every Nox FZE repository.
 #
 #   identity-guard.sh config         the repository's git identity is the canonical one
 #   identity-guard.sh message <file> a commit message has no attribution trailers
@@ -13,10 +15,14 @@ readonly NAME='Nox FZE'
 readonly EMAIL='336414419+noxfze-admin@users.noreply.github.com'
 # Attribution trailers of any kind, plus "generated with/by" footers.
 readonly FORBIDDEN='^(co-authored-by|[a-z0-9-]*-session|generated-by|signed-off-by)[[:space:]]*:|generated (with|by) '
+# Conventional Commits subject: type(scope)!: description. feat → minor, fix/perf → patch, ! → major.
+readonly SUBJECT='^(feat|fix|perf|refactor|docs|style|test|build|ci|chore|revert)(\([a-z0-9][a-z0-9-]*\))?!?: [^ ].*'
 
 fail() { echo "identity-guard: $*" >&2; exit 1; }
 
 check_message() {
+  local subject; subject="$(grep -v '^#' "$1" | head -1)"
+  [[ "$subject" =~ $SUBJECT ]] || fail "subject is not a Conventional Commit (type(scope)!: description): $subject"
   if grep -Eiq "$FORBIDDEN" "$1"; then fail "attribution trailer in commit message: $(grep -Ei "$FORBIDDEN" "$1" | head -1)"; fi
   # Optional local denylist (never committed): .git/info/identity-denylist, one word per line.
   local deny; deny="$(git rev-parse --git-dir 2>/dev/null)/info/identity-denylist"
