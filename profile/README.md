@@ -10,6 +10,6 @@ An independent software engineering company. We design, develop and operate prop
 
 **Research** · **Engineering** · **Operations**
 
-[noxfze.com](https://noxfze.com) · [contact@noxfze.com](mailto:contact@noxfze.com) · Umm Al Quwain, United Arab Emirates
+[noxfze.com](https://noxfze.com) · [contact@noxfze.com](mailto:contact@noxfze.com) · [Bluesky](https://bsky.app/profile/noxfze.com) · Umm Al Quwain, United Arab Emirates
 
 <sub>Privately held · Est. 2025 · Licence No. 11054, Umm Al Quwain Free Trade Zone</sub>
