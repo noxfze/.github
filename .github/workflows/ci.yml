@@ -1,5 +1,6 @@
-# Fails the push if any new commit is not authored and committed by Nox FZE
-# (noxfze-admin) or carries an attribution trailer. Same rule as .githooks.
+# Every push: the identity of every new commit (same rule as .githooks), and
+# the profile README unchanged from its pinned hash (brand.lock, written only
+# by the release).
 name: CI
 on: push
 permissions:
@@ -19,3 +20,5 @@ jobs:
         run: |
           if [[ "$BEFORE" =~ ^0+$ ]] || ! git cat-file -e "$BEFORE" 2>/dev/null; then range="$AFTER"; else range="$BEFORE..$AFTER"; fi
           bash .githooks/identity-guard.sh range "$range"
+      - name: Profile README matches its pinned hash
+        run: sha256sum --check --strict brand.lock
