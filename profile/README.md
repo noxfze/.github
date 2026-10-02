@@ -6,7 +6,7 @@
 
 ### Nox FZE
 
-Nox FZE configures, operates and maintains software to each customer's specification.
+Nox FZE configures, operates, and maintains market data capture software to each customer's specification, with every hour sealed and signed.
 
 **Design** · **Engineering** · **Operations**
 
