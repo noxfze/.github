@@ -3,7 +3,13 @@
 All notable changes to the Nox FZE organization profile. Every Nox FZE repository is released
 together under one version: [Semantic Versioning 2.0.0](https://semver.org/),
 derived from [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
-by `nox-website/scripts/release.mjs`, which writes each entry.
+by the release tooling, which writes each entry.
+
+## [2.1.0](https://github.com/noxfze/.github/compare/v2.0.2...v2.1.0) (2026-10-02)
+
+### Miscellaneous
+
+* **profile:** fail any profile README that differs from its pinned hash ([1fa13bd](https://github.com/noxfze/.github/commit/1fa13bd337c6f569d3ec18fecfa41faa8bb14c96))
 
 ## [2.0.2](https://github.com/noxfze/.github/compare/v2.0.1...v2.0.2) (2026-10-02)
 
