@@ -6,7 +6,7 @@
 
 ### Nox FZE
 
-Software engineering for electronic markets. We design, implement, operate and maintain the computer-systems software beneath trading and market-data infrastructure — from the problem to the program.
+Nox FZE configures, operates and maintains software to each customer's specification.
 
 **Design** · **Engineering** · **Operations**
 
