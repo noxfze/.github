@@ -1,9 +1,50 @@
 #!/usr/bin/env bash
-# Checks every commit about to be pushed (stdin: <local ref> <local sha> <remote ref> <remote sha>).
-guard="$(git rev-parse --show-toplevel)/.githooks/identity-guard.sh"
+# Checks every commit and tag about to be pushed (stdin: <local ref> <local sha> <remote ref> <remote sha>).
+#
+# Identity: every new commit passes identity-guard.sh. Dates: every author, committer and tagger date after the
+# boundary commit is the daily publication time, 06:17:00 UTC, with the offset +0000. History reachable from the
+# boundary predates the schedule and is never rewritten, so it is exempt, as are the tags made on it before the
+# schedule. The CI workflow runs the same date rule on the server. Workstation checks: every pushed range then
+# passes the checks configured outside the repository, which fail closed when absent.
+root="$(git rev-parse --show-toplevel)"
+guard="${root}/.githooks/identity-guard.sh"
+checks="$(git config --get workstation.checks || true)"
+[[ -x "${checks}" ]] || { echo 'pre-push: workstation checks are not configured' >&2; exit 1; }
+readonly BOUNDARY=8594bca29a34f629f5f14566d340ce33a0f3ab85
+readonly BOUNDARY_TAGGED=1790943215
 zero=0000000000000000000000000000000000000000
-while read -r _ local_sha _ remote_sha; do
+
+# ok <unix seconds> <offset>: the date is 06:17:00 UTC (22620 seconds after midnight) with the offset +0000.
+ok() { [[ $1 =~ ^[0-9]+$ ]] && (( $1 % 86400 == 22620 )) && [[ $2 == +0000 ]]; }
+
+bad=0
+while read -r local_ref local_sha remote_ref remote_sha; do
   [[ "$local_sha" == "$zero" ]] && continue
   if [[ "$remote_sha" == "$zero" ]]; then range="$local_sha"; else range="$remote_sha..$local_sha"; fi
   "$guard" range "$range" || exit 1
+  "${checks}" pre-push "${root}" "${range}" || bad=1
+
+  exclude=("^$BOUNDARY")
+  [[ "$remote_sha" != "$zero" ]] && git cat-file -e "$remote_sha" 2>/dev/null && exclude+=("^$remote_sha")
+  commits="$(git rev-list "$local_sha" "${exclude[@]}")" || { echo "pre-push: cannot list $local_ref" >&2; exit 1; }
+  for sha in $commits; do
+    read -r a az c cz <<< "$(git log -1 --format='%ad %cd' --date=raw "$sha")"
+    ok "$a" "$az" && ok "$c" "$cz" || {
+      echo "pre-push: commit ${sha:0:7} is not dated at a publication time (06:17:00 +0000): $a $az, $c $cz" >&2
+      bad=1
+    }
+  done
+
+  if [[ "$remote_ref" == refs/tags/* ]]; then
+    # The tagger line of the pushed object itself (header only), whatever name it was pushed by.
+    tagger="$(git cat-file -p "$local_sha" | sed -n '/^$/q;s/^tagger .*> \([0-9]*\) \([-+][0-9]\{4\}\)$/\1 \2/p')"
+    read -r t tz <<< "$tagger"
+    # Exempt only tags made before the schedule on history it predates; a new tag there would publish its time.
+    git merge-base --is-ancestor "$local_sha^{commit}" "$BOUNDARY" && [[ ${t:-} =~ ^[0-9]+$ ]] && (( t <= BOUNDARY_TAGGED )) ||
+    ok "${t:-}" "${tz:-}" || {
+      echo "pre-push: tag ${remote_ref#refs/tags/} is not dated at a publication time (06:17:00 +0000): ${tagger:-none}" >&2
+      bad=1
+    }
+  fi
 done
+exit "$bad"

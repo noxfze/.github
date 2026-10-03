@@ -1,2 +1,10 @@
 #!/usr/bin/env bash
-exec "$(git rev-parse --show-toplevel)/.githooks/identity-guard.sh" message "$1"
+#
+# Checks the commit message (Conventional Commits subject, no trailers), then runs the
+# workstation checks on it. The workstation checks fail closed when absent.
+set -euo pipefail
+root="$(git rev-parse --show-toplevel)"
+"${root}/.githooks/identity-guard.sh" message "$1"
+checks="$(git config --get workstation.checks || true)"
+[[ -x "${checks}" ]] || { echo 'commit-msg: workstation checks are not configured' >&2; exit 1; }
+exec "${checks}" commit-msg "$1"

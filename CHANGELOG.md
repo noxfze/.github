@@ -5,6 +5,10 @@ together under one version: [Semantic Versioning 2.0.0](https://semver.org/),
 derived from [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
 by the release tooling, which writes each entry.
 
+## [2.2.0](https://github.com/noxfze/.github/compare/v2.1.0...v2.2.0) (2026-10-03)
+
+* Released with the project; no changes in this repository.
+
 ## [2.1.0](https://github.com/noxfze/.github/compare/v2.0.2...v2.1.0) (2026-10-02)
 
 ### Miscellaneous

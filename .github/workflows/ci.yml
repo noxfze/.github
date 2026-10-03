@@ -1,6 +1,7 @@
-# Every push: the identity of every new commit (same rule as .githooks), and
-# the profile README unchanged from its pinned hash (brand.lock, written only
-# by the release).
+# Every push: the identity of every new commit (same rule as .githooks), the
+# profile README unchanged from its pinned hash (brand.lock, written only by
+# the release), and every commit and tag after the boundary dated at the
+# publication time, 06:17:00 UTC (same rule as .githooks/pre-push).
 name: CI
 on: push
 permissions:
@@ -22,3 +23,19 @@ jobs:
           bash .githooks/identity-guard.sh range "$range"
       - name: Profile README matches its pinned hash
         run: sha256sum --check --strict brand.lock
+      - name: Every commit and tag after v2.1.0 is dated at the publication time, 06:17:00 UTC
+        env:
+          BOUNDARY: 8594bca29a34f629f5f14566d340ce33a0f3ab85
+          BOUNDARY_TAGGED: 1790943215
+        run: |
+          git cat-file -e "$BOUNDARY^{commit}" || { echo "::error::boundary $BOUNDARY is missing"; exit 1; }
+          bad=0
+          ok() { [[ $1 =~ ^[0-9]+$ ]] && (( $1 % 86400 == 22620 )) && [[ $2 == +0000 ]]; }
+          while read -r sha a az c cz; do
+            ok "$a" "$az" && ok "$c" "$cz" || { echo "::error::$sha is not dated at a publication time"; bad=1; }
+          done < <(git log --format='%H %ad %cd' --date=raw "$BOUNDARY..HEAD")
+          while read -r tag t tz; do
+            git merge-base --is-ancestor "$tag^{commit}" "$BOUNDARY" && [[ $t =~ ^[0-9]+$ ]] && (( t <= BOUNDARY_TAGGED )) && continue
+            ok "$t" "$tz" || { echo "::error::tag $tag is not dated at a publication time"; bad=1; }
+          done < <(git for-each-ref --format='%(refname:short) %(taggerdate:raw)' refs/tags)
+          exit "$bad"
