@@ -5,6 +5,12 @@ together under one version: [Semantic Versioning 2.0.0](https://semver.org/),
 derived from [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
 by the release tooling, which writes each entry.
 
+## [2.2.1](https://github.com/noxfze/.github/compare/v2.2.0...v2.2.1) (2026-10-18)
+
+### Documentation
+
+* **profile:** carry the current company line and coordinates in the profile README ([81d8e17](https://github.com/noxfze/.github/commit/81d8e17cacce00121eb5a9bc78e49eb1e228f752))
+
 ## [2.2.0](https://github.com/noxfze/.github/compare/v2.1.0...v2.2.0) (2026-10-03)
 
 * Released with the project; no changes in this repository.
