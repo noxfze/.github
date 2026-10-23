@@ -5,6 +5,12 @@ together under one version: [Semantic Versioning 2.0.0](https://semver.org/),
 derived from [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
 by the release tooling, which writes each entry.
 
+## [2.2.3](https://github.com/noxfze/.github/compare/v2.2.2...v2.2.3) (2026-10-23)
+
+### Bug Fixes
+
+* **profile:** the banners print the coordinates of record, 25.55° N ([1a994aa](https://github.com/noxfze/.github/commit/1a994aaab2ca0460a16c77fb1ac5a5833299b95d))
+
 ## [2.2.2](https://github.com/noxfze/.github/compare/v2.2.1...v2.2.2) (2026-10-23)
 
 ### Documentation
