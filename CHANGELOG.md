@@ -5,6 +5,12 @@ together under one version: [Semantic Versioning 2.0.0](https://semver.org/),
 derived from [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
 by the release tooling, which writes each entry.
 
+## [2.2.2](https://github.com/noxfze/.github/compare/v2.2.1...v2.2.2) (2026-10-23)
+
+### Documentation
+
+* **profile:** state the Lighter recorder, its price, a real hour to check, how to order and the registration check ([f82ee04](https://github.com/noxfze/.github/commit/f82ee041484688d6278144359db2b653232f4434))
+
 ## [2.2.1](https://github.com/noxfze/.github/compare/v2.2.0...v2.2.1) (2026-10-18)
 
 ### Documentation
